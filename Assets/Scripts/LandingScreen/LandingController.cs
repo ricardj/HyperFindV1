@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class LandingController : MonoBehaviour
 {
@@ -34,9 +35,14 @@ public class LandingController : MonoBehaviour
     {
 
         float timeAnimation = 4f;
-        imageToFade.DOFade(0, timeAnimation).SetDelay(timeAnimation / 2);
-        DOTween.To(() => materialToFade.GetFloat(materialPropertyToFade), x => materialToFade.SetFloat(materialPropertyToFade, x), 0.82f, timeAnimation);
+        
+        DOTween.To(() => materialToFade.GetFloat(materialPropertyToFade), x => materialToFade.SetFloat(materialPropertyToFade, x), 0.82f, timeAnimation).OnComplete(()=>
+        {     
+            GameManager.get.LoadLevel(1, null);
+        });
         objectToScale.transform.DOMove(Vector3.up * 200, timeAnimation + 2).SetEase(Ease.InOutSine).SetRelative();
 
+        
+        
     }
 }

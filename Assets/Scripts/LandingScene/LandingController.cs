@@ -38,7 +38,7 @@ public class LandingController : MonoBehaviour
         
         DOTween.To(() => materialToFade.GetFloat(materialPropertyToFade), x => materialToFade.SetFloat(materialPropertyToFade, x), 0.82f, timeAnimation).OnComplete(()=>
         {     
-            GameManager.get.LoadLevel(1, null);
+            
         });
         objectToScale.transform.DOMove(Vector3.up * 200, timeAnimation + 2).SetEase(Ease.InOutSine).SetRelative();
 

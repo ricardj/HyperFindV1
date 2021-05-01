@@ -10,7 +10,6 @@ public class LoadingManager : MonoBehaviour
         if (get == null)
         {
             get = this;
-            DontDestroyOnLoad(get);
         }
         else if (get != this)
             Destroy(gameObject);

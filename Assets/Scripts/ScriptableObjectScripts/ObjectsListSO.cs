@@ -6,4 +6,12 @@ using UnityEngine;
 public class ObjectsListSO : ScriptableObject
 {
     public List<string> objectsList;
+
+    public bool IsObjectInList(string objectId)
+    {
+        string foundObject = objectsList.Find(x => x == objectId);
+        if (foundObject != null)
+            return true;
+        return false;
+    }
 }

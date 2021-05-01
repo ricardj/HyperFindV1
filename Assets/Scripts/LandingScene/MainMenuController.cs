@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Events;
 public class MainMenuController : MonoBehaviour
 {
     [Header("Animation values")]
@@ -20,6 +21,12 @@ public class MainMenuController : MonoBehaviour
     public CanvasGroup optionsPanel;
     public GameObject mainTitlesPanel;
 
+    [Header("Events")]
+    public UnityEvent OnStartButtonEvent;
+    public UnityEvent OnCreditsButtonEvent;
+    public UnityEvent OnExitButtonEvent;
+
+
     //Flag values
     bool initialClick = false;
 
@@ -32,17 +39,20 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStartButton()
     {
-
+        OnStartButtonEvent.Invoke();
+        LandingSceneManager.get.NewGame();
     }
 
     public void OnCreditsButton()
     {
-
+        OnCreditsButtonEvent.Invoke();
+        LandingSceneManager.get.Credits();
     }
 
     public void OnExitButton()
     {
-
+        OnExitButtonEvent.Invoke();
+        LandingSceneManager.get.ExitGame();
     }
 
     public void Update()
@@ -59,7 +69,7 @@ public class MainMenuController : MonoBehaviour
 
     public IEnumerator InitialSequence()
     {
-        Debug.Log("So far so good");
+
         mainTitlesPanel.transform.DOMove(mainTitleAlternativePlaceholder.transform.position, startSequenceAnimationDuration);
         yield return new WaitForSeconds(startSequenceAnimationDuration);
         optionsPanel.gameObject.SetActive(true);

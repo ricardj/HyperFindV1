@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class SceneChangeManager : MonoBehaviour
 {
+    //Flag values
+    public static bool loadingScene = false;
+
     public static SceneChangeManager get;
     void Awake()
     {
@@ -26,22 +29,51 @@ public class SceneChangeManager : MonoBehaviour
 
     IEnumerator LoadYourAsyncScene(int levelIndex, Action endCallback)
     {
-        // The Application loads the Scene in the background as the current Scene runs.
-        // This is particularly good for creating loading screens.
-        // You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
-        // a sceneBuildIndex of 1 as shown in Build Settings.
+        if(!loadingScene)
+        {
+            loadingScene = true;
+
+            yield return LoadLoadingScene();
+
+            yield return ActivateLoadingAnimationAndLoadNextScene(levelIndex);
+
+
+
+            loadingScene = false;
+        }
+    }
+
+    public IEnumerator ActivateLoadingAnimationAndLoadNextScene(int levelIndex)
+    {
+        LoadingManager loadingManager = FindObjectOfType<LoadingManager>();
+        bool animationComplete = false;
+        loadingManager.Show(() => animationComplete = true);
+
 
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelIndex);
         asyncLoad.allowSceneActivation = false;
-
         // Wait until the asynchronous scene fully loads
-        while (asyncLoad.progress < 0.9f)
+        while (asyncLoad.progress < 0.9f || !animationComplete)
         {
             yield return null;
         }
-        if (endCallback != null)
-            endCallback.Invoke();
+
         asyncLoad.allowSceneActivation = true;
+        if (loadingManager != null)
+            loadingManager.Hide();
+    }
+
+    public IEnumerator LoadLoadingScene()
+    {
+        yield return null;
+
+        AsyncOperation loadingSceneAsyncLoad = SceneManager.LoadSceneAsync(3, LoadSceneMode.Additive);
+        loadingSceneAsyncLoad.allowSceneActivation = true;
+
+        while (loadingSceneAsyncLoad.progress < 1)
+        {
+            yield return loadingSceneAsyncLoad;
+        }
     }
 
     public int AvailableSceneToIndex(AvailableScenes availableScenes)

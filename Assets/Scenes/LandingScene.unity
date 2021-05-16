@@ -3529,6 +3529,15 @@ MonoBehaviour:
   mainTitleNormalPlaceholder: {fileID: 1168611993}
   optionsPanel: {fileID: 1633084724}
   mainTitlesPanel: {fileID: 530933886}
+  OnStartButtonEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCreditsButtonEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitButtonEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!225 &1660891853
 CanvasGroup:
   m_ObjectHideFlags: 0

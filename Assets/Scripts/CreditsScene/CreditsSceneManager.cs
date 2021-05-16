@@ -19,7 +19,7 @@ public class CreditsSceneManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetMouseButton(0))
+        if(Input.GetMouseButtonDown(0))
         {
             SceneChangeManager.get.LoadLevel(AvailableScenes.MAIN_SCREEN);
         }

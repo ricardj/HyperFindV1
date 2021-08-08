@@ -38,12 +38,20 @@ public class ObjectsPanelController : MonoBehaviour
         for(int i = 0; i < currentObjectsList.objectsList.Count; i++)
         {
             GameObject newLabelList = Instantiate(labelListPrefab, parentList);
-            string currentObjectId = currentObjectsList.objectsList[i];
-            newLabelList.GetComponentInChildren<TextMeshProUGUI>().text = "- " + currentObjectId;
-            LabelListController labelListController = newLabelList.GetComponentInChildren<LabelListController>();
-            labelListController.objectId = currentObjectId;
-            listReferences.Add(labelListController);            
+            LabelListController labelListController = ConfigureNewLabel(i, newLabelList);
+            listReferences.Add(labelListController);
         }
+    }
+
+    private LabelListController ConfigureNewLabel(int i, GameObject newLabelList)
+    {
+        LabelListController labelListController = newLabelList.GetComponentInChildren<LabelListController>();
+        string currentObjectId = currentObjectsList.objectsList[i];
+        LabelConfiguration labelConfiguration = new LabelConfiguration();
+        labelConfiguration.labelText = "- " + currentObjectId;
+        labelConfiguration.objectId = currentObjectId;
+        labelListController.ConfigureLabel(labelConfiguration);
+        return labelListController;
     }
 
     public void DestroyChild(GameObject parent)
@@ -61,7 +69,8 @@ public class ObjectsPanelController : MonoBehaviour
         if(labelListController != null)
         {
             listReferences.Remove(labelListController);
-            Destroy(labelListController.gameObject);
+            Debug.Log("Trying to mark the flag");
+            labelListController.ShowLabelFinishedFeedback();
         }
     }
 }

@@ -5,26 +5,44 @@ using UnityEngine;
 public class CursorEffectsController : MonoBehaviour
 {
     public static string prefabName = "M - CursorEffects";
-    public GameObject particlesPrefab; 
+    public GameObject particlesPrefab;
 
-    
 
+    [Header("Pooling settings")]
+    public Queue<ParticleSystem> particlesPool;
+    public int poolSize = 20;
+
+    private void Start()
+    {
+        InitializeParticlesPool();
+    }
+
+    public void InitializeParticlesPool()
+    {
+        particlesPool = new Queue<ParticleSystem>();
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject newParticles = Instantiate(particlesPrefab, this.transform);
+            ParticleSystem particlesComponent = newParticles.GetComponentInChildren<ParticleSystem>();
+            particlesPool.Enqueue(particlesComponent);
+        }
+    }
 
     public void Update()
     {
         if (Input.GetMouseButtonDown(0))
-           StartCoroutine(MakePressEffect());
+           MakePressEffect();
     }
 
-    public IEnumerator MakePressEffect()
+    public void MakePressEffect()
     {
         Vector3 mousePosition = Input.mousePosition;
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         worldPosition.z = 0;
-        GameObject newParticles = Instantiate(particlesPrefab, null);
+        ParticleSystem newParticles = particlesPool.Dequeue();
         newParticles.transform.position = worldPosition;
-        newParticles.GetComponentInChildren<ParticleSystem>().Play();
-        yield return new WaitForSeconds(2f);
-        Destroy(newParticles);
+        newParticles.Play();
+        particlesPool.Enqueue(newParticles);
     }
 }

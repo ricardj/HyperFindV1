@@ -12,9 +12,22 @@ public class CursorEffectsController : MonoBehaviour
     public Queue<ParticleSystem> particlesPool;
     public int poolSize = 20;
 
+    public SpriteRenderer cursorRenderer;
+
+    Camera mainCamera;
+
     private void Start()
     {
+        mainCamera = Camera.main;
+
+
+        InitializeCursor();
         InitializeParticlesPool();
+    }
+
+    public void InitializeCursor()
+    {
+        Cursor.visible = false;
     }
 
     public void InitializeParticlesPool()
@@ -29,10 +42,24 @@ public class CursorEffectsController : MonoBehaviour
         }
     }
 
+
+
     public void Update()
     {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
-           MakePressEffect();
+            MakePressEffect();
+        UpdateMousePosition();
+    }
+
+    private void UpdateMousePosition()
+    {
+        cursorRenderer.transform.position = mainCamera.ScreenToWorldPoint(Input.mousePosition + new Vector3(0, 0, 0.5f));
     }
 
     public void MakePressEffect()

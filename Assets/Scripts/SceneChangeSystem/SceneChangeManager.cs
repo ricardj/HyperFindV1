@@ -11,6 +11,8 @@ public class SceneChangeManager : MonoBehaviour
     public static bool loadingScene = false;
 
     public static SceneChangeManager get;
+
+    public UnityEvent OnSceneChanged;
     void Awake()
     {
         if (get == null)
@@ -59,6 +61,7 @@ public class SceneChangeManager : MonoBehaviour
         }
 
         asyncLoad.allowSceneActivation = true;
+        OnSceneChanged.Invoke();
         if (loadingManager != null)
             loadingManager.Hide();
     }

@@ -21,6 +21,8 @@ public class FindSystemManager : Singleton<FindSystemManager>
     //Debug flag values
     int objectsFound = 0;
 
+    [Header("Some audio")]
+    public AudioClip objectFoundClip;
 
 
 
@@ -57,7 +59,9 @@ public class FindSystemManager : Singleton<FindSystemManager>
         OnObjectFoundEvent.Invoke(foundObject);
         objectsFound++;
 
-        if(objectsFound >= currentObjectsList.objectsList.Count)
+        AudioManager.get.PlayClip(objectFoundClip);
+
+        if (objectsFound >= currentObjectsList.objectsList.Count)
         {
             OnAllObjectsFoundEvent.Invoke();
         }

@@ -11,9 +11,9 @@ public class MainMenuController : MonoBehaviour
     public float initialOptionsFadeDuration = 0.5f;
 
     [Header("UI references")]
-    public Button startButton;
-    public Button creditsButton;
-    public Button exitButton;
+    public ExtendedButton startButton;
+    public ExtendedButton creditsButton;
+    public ExtendedButton exitButton;
 
     public Transform mainTitleAlternativePlaceholder;
     public Transform mainTitleNormalPlaceholder;
@@ -26,6 +26,10 @@ public class MainMenuController : MonoBehaviour
     public UnityEvent OnCreditsButtonEvent;
     public UnityEvent OnExitButtonEvent;
 
+    [Header("Audio Clips")]
+    public AudioClip selectionClip;
+    public AudioClip changeClip;
+
 
     //Flag values
     bool initialClick = false;
@@ -35,34 +39,43 @@ public class MainMenuController : MonoBehaviour
         startButton.onClick.AddListener(() => OnStartButton());
         creditsButton.onClick.AddListener(() => OnCreditsButton());
         exitButton.onClick.AddListener(() => OnExitButton());
+
+        List<ExtendedButton> buttons = new List<ExtendedButton> { startButton, creditsButton, exitButton };
+        buttons.ForEach(button => button.OnSelectEvent.AddListener(() => AudioManager.get.PlayClip(changeClip)));
     }
 
     public void OnStartButton()
     {
         OnStartButtonEvent.Invoke();
+        AudioManager.get.PlayClip(selectionClip);
         LandingSceneManager.get.NewGame();
     }
 
     public void OnCreditsButton()
     {
         OnCreditsButtonEvent.Invoke();
+        AudioManager.get.PlayClip(selectionClip);
         LandingSceneManager.get.Credits();
+
     }
 
     public void OnExitButton()
     {
         OnExitButtonEvent.Invoke();
+        AudioManager.get.PlayClip(selectionClip);
         LandingSceneManager.get.ExitGame();
     }
 
     public void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if(!initialClick)
+            if (!initialClick)
             {
                 initialClick = true;
                 StartCoroutine(InitialSequence());
+                AudioManager.get.PlayClip(changeClip);
+
             }
         }
     }

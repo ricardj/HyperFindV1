@@ -6,6 +6,9 @@ public class CreditsSceneManager : MonoBehaviour
 {
 
     public static CreditsSceneManager get;
+
+    public bool mouseClicked = false;
+
     void Awake()
     {
         if (get == null)
@@ -19,9 +22,13 @@ public class CreditsSceneManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            SceneChangeManager.get.LoadLevel(AvailableScenes.MAIN_SCREEN);
+            //if (!mouseClicked)
+            //{
+            //    mouseClicked = true;
+                SceneChangeManager.get.LoadLevel(AvailableScenes.MAIN_SCREEN);
+            //}
         }
     }
 

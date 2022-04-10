@@ -39,8 +39,6 @@ public class SceneChangeManager : MonoBehaviour
 
             yield return ActivateLoadingAnimationAndLoadNextScene(levelIndex);
 
-
-
             loadingScene = false;
         }
     }
@@ -62,8 +60,16 @@ public class SceneChangeManager : MonoBehaviour
 
         asyncLoad.allowSceneActivation = true;
         OnSceneChanged.Invoke();
+        bool hideAnimationCompleted = false;
         if (loadingManager != null)
-            loadingManager.Hide();
+            loadingManager.Hide(() => hideAnimationCompleted = true);
+        else
+            hideAnimationCompleted = true;
+
+        while (!hideAnimationCompleted)
+        {
+            yield return null;
+        }
     }
 
     public IEnumerator LoadLoadingScene()

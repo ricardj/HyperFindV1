@@ -20,24 +20,40 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
-       // DontDestroyOnLoad(this);
+        // DontDestroyOnLoad(this);
     }
 
-    public void Hide()
+    bool hiding = false;
+    bool showing = false;
+    public void Hide(Action finishHide)
     {
-        GetComponentInChildren<CanvasGroup>().DOFade(0, 1f).OnComplete(() =>
-         {
-             Destroy(gameObject);
-         });
+        if (!hiding)
+        {
+            hiding = true;
+            GetComponentInChildren<CanvasGroup>().DOFade(0, 1f).OnComplete(() =>
+             {
+                 //gameObject.SetActive(false);
+                 hiding = false;
+                 finishHide.Invoke();
+                 Destroy(gameObject);
+             });
+        }
     }
 
     public void Show(Action onCompleteAction)
     {
-        GetComponentInChildren<CanvasGroup>().DOFade(1, 1f).OnComplete(() =>
+        if (!showing)
         {
-            onCompleteAction.Invoke();
-        });
+            //gameObject.SetActive(true);
+
+            showing = true;
+            GetComponentInChildren<CanvasGroup>().DOFade(1, 1f).OnComplete(() =>
+            {
+                showing = false;
+                onCompleteAction.Invoke();
+            });
+        }
     }
 
-    
+
 }

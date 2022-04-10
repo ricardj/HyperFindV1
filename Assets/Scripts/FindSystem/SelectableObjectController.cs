@@ -6,13 +6,13 @@ using UnityEngine.Events;
 using System;
 
 [Serializable]
-public class SelectableObjectEvent : UnityEvent<SelectableObjectPack> { }
+public class SelectableObjectEvent : UnityEvent<SelectableObjectSO> { }
 
 public class SelectableObjectController : MonoBehaviour
 {
     [Header("Configuration values")]
-    public SelectableObjectPack objectPack;
-    
+    public SelectableObjectSO objectPack;
+
 
 
     [Header("Events")]
@@ -27,31 +27,31 @@ public class SelectableObjectController : MonoBehaviour
     [HideInInspector]
     public bool selectable;
 
+    public Transform shadow;
+
     private void Start()
     {
         mainCamera = Camera.main;
-        
+
     }
 
 
     public void Update()
     {
-        if(mouseDown && selectable)
-        {     
+        if (mouseDown && selectable)
+        {
             OnObjectSelected();
             mouseDown = false;
 
-            //Vector3 mousePosition = Input.mousePosition;
-            //mousePosition = mainCamera.ScreenToWorldPoint(mousePosition);
-            //mousePosition.z = transform.position.z;
-            //transform.position = mousePosition;
         }
     }
 
 
     public void OnObjectSelected()
     {
-        transform.DOScale(Vector3.zero, 0.3f);
+        transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => transform.gameObject.SetActive(false));
+        if (shadow != null)
+            shadow.DOScale(Vector3.zero, 0.3f).OnComplete(() => shadow.gameObject.SetActive(false));
         OnObjectCorrectlySelected.Invoke(objectPack);
     }
 
@@ -62,13 +62,6 @@ public class SelectableObjectController : MonoBehaviour
     }
     public void OnMouseUp()
     {
-        mouseDown = false;        
+        mouseDown = false;
     }
-}
-
-[Serializable]
-public class SelectableObjectPack
-{
-    public string id = "Normal Object";
-    
 }

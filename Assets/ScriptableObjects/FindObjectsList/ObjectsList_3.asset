@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fdb906f9c11b4349b690d4365e70d44, type: 3}
-  m_Name: MediumLevelList
+  m_Name: ObjectsList_3
   m_EditorClassIdentifier: 
   objectsList:
-  - Bat
-  - Red book
-  - Manticore
+  - {fileID: 11400000, guid: 182627faae62db54683ac1d0fb14afd8, type: 2}
+  - {fileID: 11400000, guid: 908dcd2e11368da4891b026229364173, type: 2}
+  - {fileID: 11400000, guid: 735158abd51f4424ebf0a5146641c767, type: 2}
+  - {fileID: 11400000, guid: 17280752d870cbf40949e6d541969777, type: 2}
+  - {fileID: 11400000, guid: 42ec18ccd5c72894ea4140e54dfc18eb, type: 2}

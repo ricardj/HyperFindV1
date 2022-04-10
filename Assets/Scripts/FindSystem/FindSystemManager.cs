@@ -4,11 +4,13 @@ using UnityEngine;
 using System.Linq;
 using System;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
-public class FindSystemManager : MonoBehaviour
+public class FindSystemManager : Singleton<FindSystemManager>
 {
     [Header("Configuration values")]
     public ObjectsListSO currentObjectsList;
+    public List<ObjectsListSO> availableObjectsList;
 
     public List<SelectableObjectController> selectableObjects;
 
@@ -20,32 +22,36 @@ public class FindSystemManager : MonoBehaviour
     int objectsFound = 0;
 
 
-    public static FindSystemManager get;
-    void Awake()
-    {
-        if (get == null)
-        {
-            get = this;
-        }
-        else if (get != this)
-            Destroy(gameObject);
-    }
+
 
     public void Start()
     {
+        //Setup current List
+        SetupCurrentSelectableObjectsList();
+
         //Find all selectable objects in list
+        SetupFinalSelectableObjects();
+    }
+
+    private void SetupCurrentSelectableObjectsList()
+    {
+        currentObjectsList = availableObjectsList[Random.Range(0, availableObjectsList.Count)];
+    }
+
+    private void SetupFinalSelectableObjects()
+    {
         FindObjectsOfType<SelectableObjectController>().ToList().ForEach(x =>
         {
-            x.selectable = IsObjectSelectable(x.objectPack.id);
-            if(x.selectable)
+            x.selectable = IsObjectSelectable(x.objectPack);
+            if (x.selectable)
             {
                 selectableObjects.Add(x);
             }
             x.OnObjectCorrectlySelected.AddListener(OnObjectFound);
-        });        
+        });
     }
 
-    public void OnObjectFound(SelectableObjectPack foundObject)
+    public void OnObjectFound(SelectableObjectSO foundObject)
     {
 
         OnObjectFoundEvent.Invoke(foundObject);
@@ -57,7 +63,7 @@ public class FindSystemManager : MonoBehaviour
         }
     }
 
-    public bool IsObjectSelectable(string objectId)
+    public bool IsObjectSelectable(SelectableObjectSO objectId)
     {
         return currentObjectsList.IsObjectInList(objectId);
     }

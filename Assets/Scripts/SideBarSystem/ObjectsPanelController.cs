@@ -17,6 +17,12 @@ public class ObjectsPanelController : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(DelayedStart());
+    }
+
+    public IEnumerator DelayedStart()
+    {
+        yield return null;
         FindSystemManager.get.OnObjectFoundEvent.AddListener(RemoveObject);
         ConfigureList();
     }
@@ -46,7 +52,7 @@ public class ObjectsPanelController : MonoBehaviour
     private LabelListController ConfigureNewLabel(int i, GameObject newLabelList)
     {
         LabelListController labelListController = newLabelList.GetComponentInChildren<LabelListController>();
-        string currentObjectId = currentObjectsList.objectsList[i];
+        string currentObjectId = currentObjectsList.objectsList[i].GetObjectName();
         LabelConfiguration labelConfiguration = new LabelConfiguration();
         labelConfiguration.labelText = "- " + currentObjectId;
         labelConfiguration.objectId = currentObjectId;
@@ -63,7 +69,7 @@ public class ObjectsPanelController : MonoBehaviour
     }
 
 
-    public void RemoveObject(SelectableObjectPack objectPack)
+    public void RemoveObject(SelectableObjectSO objectPack)
     {
         LabelListController labelListController = listReferences.Find(x => x.objectId == objectPack.id);
         if(labelListController != null)
